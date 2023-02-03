@@ -1,17 +1,11 @@
-* {
-  margin-top: 0;
+html{
+ background: linear-gradient(0deg, rgba(246,246,246,1) 30%, rgba(246,246,246,1) 84%, rgba(230,229,229,1) 100%);
+ height: 100%;
+ font-family: 'jura bold';
 }
-
- ul {
-  margin-top: 0;
-}
-
 
 body {
-  margin-top: 0px;
-  margin-bottom: 0px;
-  margin-left: 0px;
-  margin-right: 0px;
+  margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
