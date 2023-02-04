@@ -1,13 +1,12 @@
-import logo from './logo.svg';
-import './App.css';
-import NavBar from './Coponents/NavBar';
 import React from "react";
-import About from './Coponents/About';
-import Home from './Coponents/Home';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Contact from './Coponents/Contact';
-import Tutorial from './Coponents/Tutorial';
-import Contribute from './Coponents/Contribute';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import './App.css';
+import About from './Components/About';
+import Contact from './Components/Contact';
+import Contribute from './Components/Contribute';
+import Home from './Components/Home';
+import NavBar from './Components/NavBar';
+import Tutorial from './Components/Tutorial';
 
 function App() {
   return (

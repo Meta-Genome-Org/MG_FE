@@ -13,9 +13,9 @@ const Dropdown = ({ open, menu, optionOnClick, labelText }) => {
           <ul className="menu">
             {menu.map((menuItem, index) => (
               <li onClick={()=>{
-                optionOnClick(menuItem);
+                optionOnClick(menuItem.keyword);
                 setDropDownOpen(false);
-            }}  key={index} className="menu-item">{menuItem}</li>
+            }}  key={index} className="menu-item">{menuItem.keyword}</li>
             ))}
           </ul>
         ) : null}
