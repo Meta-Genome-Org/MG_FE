@@ -105,7 +105,7 @@ function Home () {
 
     useEffect(()=>{
       if (mfid.length !== 0) {
-      axios.post('http://localhost:4000/QueryDataBase', {"SQL" : `SELECT authors, title, journal, year FROM MetF_References WHERE mf_id = ${mfid};`})
+      axios.get(`http://localhost:4000/MetF/${mfid}`)
       .then((response)=>{
 ;        setpubDetails(response.data.response[0]);
         console.log("POG")  
