@@ -90,14 +90,14 @@ function Home () {
 
 
     useEffect(()=>{
-      axios.post('http://localhost:4000/QueryDataBase', {"SQL" : `SELECT mf_id ,mean_value FROM MetF_StandardTable WHERE keyword="${xAxisLabel}"`})
+      axios.post(`http://localhost:4000/MetF?label=${xAxisLabel}`)
       .then((response)=>{
         setXAxisData(response.data.response)
       });
     },[xAxisLabel])
 
     useEffect(()=>{
-      axios.post('http://localhost:4000/QueryDataBase', {"SQL" : `SELECT mf_id ,mean_value FROM MetF_StandardTable WHERE keyword="${yAxisLabel}"`})
+      axios.post(`http://localhost:4000/MetF?label=${yAxisLabel}`)
       .then((response)=>{
 ;        setYAxisData(response.data.response);
       });
