@@ -1,6 +1,13 @@
 import { Link } from 'react-router-dom';
 import Logo from '../Assets/Metamaterial_genome_bird_Logo.png' ;
 
+const styles = {
+  hover: {
+    backgroundColor: '#eee'
+  }
+};
+
+
 function NavBar () {
   return (
     <>
@@ -16,18 +23,18 @@ function NavBar () {
         <Link to="/Home" style={{textAlign: 'center', margin: '0', color: 'black', textDecoration: 'none'}}>
           Home
         </Link>
-        <Link to="/About" style={{textAlign: 'center', margin: '0', color: 'black', textDecoration: 'none'}}>
-          About
-        </Link>
-        <Link to="/Contact" style={{textAlign: 'center', margin: '0', color: 'black', textDecoration: 'none'}}>
-          Contact
-        </Link>
-        <Link to="/Tutorial" style={{textAlign: 'center', margin: '0', color: 'black', textDecoration: 'none'}}>
-          Tutorial
-        </Link>
-        <Link to="/Contribute" style={{textAlign: 'center', margin: '0', color: 'black', textDecoration: 'none'}}>
+        <Link to="http://meta-genome.org/" style={{textAlign: 'center', margin: '0', color: 'black', textDecoration: 'none'}}>
           Contribute
         </Link>
+        <Link to="/Virtual Lab" style={{textAlign: 'center', margin: '0', color: 'black', textDecoration: 'none'}}>
+          Virtual Lab
+        </Link>
+        <Link to="/Contact us" style={{textAlign: 'center', margin: '0', color: 'black', textDecoration: 'none', }}>
+          Contact us
+        </Link>
+        {/* <Link to="/Contribute" style={{textAlign: 'center', margin: '0', color: 'black', textDecoration: 'none'}}>
+          Contribute
+        </Link> */}
       </div>
     </div>
 

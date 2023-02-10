@@ -1,0 +1,23 @@
+.under-construction-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  .title {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+  }
+  
+  .message {
+    font-size: 1.5rem;
+    margin-bottom: 3rem;
+  }
+  
+  .toolbox-icon {
+    color: #555;
+    margin-bottom: 2rem;
+  }
+  
