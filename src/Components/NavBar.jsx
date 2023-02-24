@@ -23,7 +23,7 @@ function NavBar () {
         <Link to="/Home" style={{textAlign: 'center', margin: '0', color: 'black', textDecoration: 'none'}}>
           Home
         </Link>
-        <Link to="http://meta-genome.org/" style={{textAlign: 'center', margin: '0', color: 'black', textDecoration: 'none'}}>
+        <Link to="http://portal.meta-genome.org/" style={{textAlign: 'center', margin: '0', color: 'black', textDecoration: 'none'}}>
           Contribute
         </Link>
         <Link to="/Virtual Lab" style={{textAlign: 'center', margin: '0', color: 'black', textDecoration: 'none'}}>

@@ -60,8 +60,9 @@ function Home () {
 
 
     useEffect(()=>{
-      axios.post('http://localhost:4000/QueryDataBase', {"SQL" : "SELECT DISTINCT keyword FROM MetF_StandardTable"})
+      axios.get('http://meta-genome.org:4000/getkeys')
       .then((response)=>{
+        
         setDropDownOptions(response.data.response)
       });
     },[])
@@ -90,22 +91,24 @@ function Home () {
 
 
     useEffect(()=>{
-      axios.post(`http://localhost:4000/MetF?label=${xAxisLabel}`)
+      if (xAxisLabel !== "X-Axis"  || yAxisLabel !== "Y-Axis"){
+      axios.get(`http://meta-genome.org:4000/MetF?label=${xAxisLabel}`)
       .then((response)=>{
         setXAxisData(response.data.response)
-      });
+      })};
     },[xAxisLabel])
 
     useEffect(()=>{
-      axios.post(`http://localhost:4000/MetF?label=${yAxisLabel}`)
+      if (xAxisLabel !== "X-Axis" || yAxisLabel !== "Y-Axis"){
+      axios.get(`http://meta-genome.org:4000/MetF?label=${yAxisLabel}`)
       .then((response)=>{
 ;        setYAxisData(response.data.response);
-      });
+      })};
     },[yAxisLabel])
 
     useEffect(()=>{
       if (mfid.length !== 0) {
-      axios.get(`http://localhost:4000/MetF/${mfid}`)
+      axios.get(`http://meta-genome.org:4000/MetF/${mfid}`)
       .then((response)=>{
 ;        setpubDetails(response.data.response[0]);
         console.log("POG")  
@@ -206,13 +209,15 @@ function Home () {
 
           <div style={{margin:"50px"}}>
           
+          <p>mf_id:  {mfid}</p>
+          <p>foam detail: {pubDetails.entry}</p>
           <p>{xAxisLabel}: {selectedData.x}</p>
           <p>{xAxisLabel}: {selectedData.y}</p>
           <p>authors: {pubDetails.authors}</p>
           <p>title: {pubDetails.title}</p>
           <p>journal: {pubDetails.journal}</p>
           <p>year: {pubDetails.year}</p>
-          <p>mf_id:  {mfid}</p>
+          
           
           </div>
           
