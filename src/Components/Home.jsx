@@ -60,15 +60,15 @@ function Home () {
 
 
     useEffect(()=>{
-      axios.get('http://192.168.1.161/rest/data/', {}, {
+      axios.get('http://LOCAL_DEPLOYMENT/rest/data/', {}, {
         auth: {
-          username: "test",
-          password: "Nist123!"
+          username: "LOGIN1",
+          password: "LOGIN-PASS"
         }
       /*
         useEffect(() => {
           const token = 'test_access';
-          axios.get('http://192.168.1.161/rest/data/', {
+          axios.get('http://LOCAL_DEPLOYMENT/rest/data/', {
             headers: {
               'Authorization': `${token}`
             }*/  
@@ -114,8 +114,8 @@ function Home () {
       if (xAxisLabel !== "X-Axis" || yAxisLabel !== "Y-Axis"){
       axios.get(`http://meta-genome.org:4000/MetF?label=${yAxisLabel}`, {}, {
         auth: {
-          username: "frontpage_user",
-          password: "PaperCupCheck443!"
+          username: "",
+          password: ""
         }
       })
       .then((response)=>{
