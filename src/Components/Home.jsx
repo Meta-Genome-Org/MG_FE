@@ -60,10 +60,22 @@ function Home () {
 
 
     useEffect(()=>{
-      axios.get('http://meta-genome.org:4000/getkeys')
+      axios.get('http://192.168.1.161/rest/data/', {}, {
+        auth: {
+          username: "test",
+          password: "Nist123!"
+        }
+      /*
+        useEffect(() => {
+          const token = 'test_access';
+          axios.get('http://192.168.1.161/rest/data/', {
+            headers: {
+              'Authorization': `${token}`
+            }*/  
+      })
       .then((response)=>{
-        
-        setDropDownOptions(response.data.response)
+        console.log(response)
+        // setDropDownOptions(response.data.response)
       });
     },[])
 
@@ -100,7 +112,12 @@ function Home () {
 
     useEffect(()=>{
       if (xAxisLabel !== "X-Axis" || yAxisLabel !== "Y-Axis"){
-      axios.get(`http://meta-genome.org:4000/MetF?label=${yAxisLabel}`)
+      axios.get(`http://meta-genome.org:4000/MetF?label=${yAxisLabel}`, {}, {
+        auth: {
+          username: "frontpage_user",
+          password: "PaperCupCheck443!"
+        }
+      })
       .then((response)=>{
 ;        setYAxisData(response.data.response);
       })};
