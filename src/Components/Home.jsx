@@ -3,79 +3,69 @@ import React, { useEffect, useState } from 'react';
 import Plot from 'react-plotly.js';
 import getListEntryByID from '../Utils/getListEntryByID';
 import removeNullsFromCombinedList from '../Utils/removeNullsFromCombinedList';
-import searchListforMFID from '../Utils/searchListForID';
+//import searchListformet_id from '../Utils/searchListForID';
 import useWindowDimensions from '../Utils/useWindowDimensions';
 import Dropdown from './Dropdown';
+import convert_data from  '../Utils/convert_data';
 import getPubIds from '../Utils/getPubData'
+import * as THREE from 'three';
+import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
+import notFoundImage from '../Assets/not_found.png';
+
 
 
 function Home () {
     const { height, } = useWindowDimensions();
 
-    const [xAxisLabel, setXAxisLabel] = useState("X-Axis");
-    const [yAxisLabel, setYAxisLabel] = useState("Y-Axis");
+    const [xAxisLabel, setXAxisLabel] = useState("bulk-density");
+    const [yAxisLabel, setYAxisLabel] = useState("compressive-modulus");
+
+    const pascalList = []
+
+    const [xAxisUnit, setXAxisUnit] = useState(['kg/m\u00b3']);
+    const [yAxisUnit, setYAxisUnit] = useState(["MPa"]);
 
     const [xAxisData, setXAxisData] = useState([]);
     const [yAxisData, setYAxisData] = useState([]);
 
     const [listToPlot, setListToPlot] = useState([]);
 
+    const [xUnitsToPlot, setXUnitsToPlot] = useState([]);
+    const [yUnitsToPlot, setYUnitsToPlot] = useState([]);
+
     const [dropDownOptions, setDropDownOptions] = useState([]);
 
+    const [xUnitsDropDownOptions, setXUnitsDropDownOptions] = useState([]);
+    const [yUnitsDropDownOptions, setYUnitsDropDownOptions] = useState([]);
+
     const [selectedData, setSelectedData] = useState({});
-    const [mfid, setmfid] = useState([]);
+    const [met_id, setmet_id] = useState([]);
     
     const [pubDetails, setpubDetails] = useState([]);
+    const [imgURL, setimgURL] = useState([])
 
     const onPlotClick = (data) => {
-  setmfid(listToPlot[data.points[0].pointIndex].xAxis.mf_id);
-  // axios.post('http://localhost:4000/QueryDataBase', {"SQL" : "SELECT authors, title, journal, year FROM MetF_References WHERE mf_id = ${mfid}"})
-  //     .then((response)=>{
-  //       (setpubDetails(response.data[0]))
-  //     });
+      console.log("on click")
+      console.log(data)
+      console.log("list to plot on click")
+      console.log(listToPlot)
+  setmet_id(listToPlot[data.points[0].pointIndex].met_id);
+  setSelectedData(data.points[0]);};
 
-  // getPubIds(mfid).then(() => {
-  //   setpubDetails(getPubIds(mfid))
-  //   console.log("PUB DETAILS");
-  //   console.log(pubDetails);
-    
-  // });
-  setSelectedData(data.points[0]);
-};
-    
+  useEffect(()=>{
+    // const [shorterArray, longerArraySnipped ] = truncateArray(xAxisData, yAxisData);
     
 
-
-    
-    // function truncateArray(arr1, arr2) {
-    //   let shorterArray = arr1.length < arr2.length ? arr1 : arr2;
-    //   let longerArray = arr1.length >= arr2.length ? arr2 : arr1;
-    
-    //   let shorterIds = shorterArray.map(item => item.mf_id);
-    //   let longerArraySnipped = longerArray.filter(item => shorterIds.includes(item.mf_id));
-    //   return [shorterArray, longerArraySnipped]
-
-    // }
-
-
+  },[])
 
     useEffect(()=>{
-      axios.get('http://LOCAL_DEPLOYMENT/rest/data/', {}, {
-        auth: {
-          username: "LOGIN1",
-          password: "LOGIN-PASS"
-        }
-      /*
-        useEffect(() => {
-          const token = 'test_access';
-          axios.get('http://LOCAL_DEPLOYMENT/rest/data/', {
-            headers: {
-              'Authorization': `${token}`
-            }*/  
-      })
+      
+      axios.get('http://127.0.0.1:5000/avail_data', {}, {
+        })
       .then((response)=>{
-        console.log(response)
-        // setDropDownOptions(response.data.response)
+        setDropDownOptions(response.data)
+        console.log("MEASURES_DROP")
+        console.log(dropDownOptions)
       });
     },[])
 
@@ -83,61 +73,167 @@ function Home () {
     useEffect(()=>{
       // const [shorterArray, longerArraySnipped ] = truncateArray(xAxisData, yAxisData);
       const combinedXYDataArray = [];
-      if(xAxisData.length > yAxisData.length){
+      const xUnitsArray = [];
+      const yUnitsArray = [];
+
+      if(xAxisData.length > 0 && yAxisData.length > 0 ){
+
         for(let i = 0; i < yAxisData.length; i++){
-          if(searchListforMFID(xAxisData, yAxisData[i].mf_id)){
-            combinedXYDataArray.push({yAxis: yAxisData[i], xAxis: getListEntryByID(xAxisData, yAxisData[i].mf_id)})
-          }
-        }
-      }
-      else  if(xAxisData.length <= yAxisData.length) {
-        for(let i = 0; i < xAxisData.length; i++){
-          if(searchListforMFID(yAxisData, xAxisData[i].mf_id)){
-            combinedXYDataArray.push({xAxis: xAxisData[i], yAxis: getListEntryByID(yAxisData, xAxisData[i].mf_id)})
-          }
-        }
-      }
-      setListToPlot(removeNullsFromCombinedList(combinedXYDataArray));
-     
+          
+          if(yAxisData[i][yAxisLabel][0]['values'] !== null && xAxisData[i][xAxisLabel][0]['values'] !== null){
+            
+            let yValues = yAxisData[i][yAxisLabel][0]['values'];
+            let yUnits = yAxisData[i][yAxisLabel][1]['units'];
+            let xValues = xAxisData[i][xAxisLabel][0]['values'];
+            let xUnits = xAxisData[i][xAxisLabel][1]['units'];
+            let id = yAxisData[i]['id'];
+            let sub_type = yAxisData[i]['submission_type'];
+            let mat_type = yAxisData[i]['sensitivity'];
+            console.log("Y AXIS")
+            console.log(yValues)
+            console.log("X AXIS")
+            console.log(xValues)
+            for (let yKey in yValues) {
+              for (let xKey in xValues){
+                combinedXYDataArray.push({yAxis: yValues[yKey], yUnit: yUnits, xAxis: xValues[xKey], xUnit: xUnits, yType: yKey, xType: xKey, met_id: id, sub_type:sub_type, mat_type:mat_type}) 
+                console.log({yAxis: yValues[yKey], yUnit: yUnits, xAxis: xValues[xKey], xUnit: xUnits, yType: yKey, xType: xKey, met_id: id, sub_type:sub_type, mat_type:mat_type})
+            }
+            
+          }}}
+      
+      //console.log(combinedXYDataArray)
+      console.log("combined POS")
+      console.log(combinedXYDataArray)
+      setListToPlot(combinedXYDataArray)
+      console.log("list to plot")
+      console.log(listToPlot)
+
+      //setXAxisUnits(new Set(combinedXYDataArray.filter(item => item.xUnit !== null).map(item => item.xUnit)));
+      //setYAxisUnits(new Set(combinedXYDataArray.filter(item => item.yUnit !== null).map(item => item.yUnit)));
+      
+      // for (let xunits of xAxisUnits){
+      //   xUnitsArray.push({keyword: xunits})
+        
+      // }
+      // for (let yunits of yAxisUnits){
+      //   yUnitsArray.push({keyword: yunits})
+      //   //console.log("Y_UNIT")
+      //   //console.log(yunits)
+      // }
+
+      // setXUnitsToPlot(xUnitsArray)
+      // setYUnitsToPlot(yUnitsArray)
+      //console.log("Y_UNITS_")
+      //console.log(yUnitsToPlot)
+      //console.log(yAxisUnits)
+      //console.log("Y_DATA")
+      //console.log(yAxisData)
+      //console.log(yAxisUnits)
+      //setYAxisUnits(Set(combinedXYDataArray.map(item => item.yUnit)))
+      
+    }
     },[xAxisData, yAxisData])
 
+    // useEffect(()=>{
+    //   if (xAxisLabel == "X-Axis"){
+        
+    //   axios.get(`http://127.0.0.1:5000/get_vals/bulk-density`)
+    //   .then((response)=>{
+
+    //     setXAxisLabel("bulk-density")
+    //     setXAxisData(response.data)
+        
+    //   })};
+    // },[xAxisLabel])
+
+    // useEffect(()=>{
+    //   if (yAxisLabel == "Y-Axis"){
+
+    //   axios.get(`http://127.0.0.1:5000/get_vals/compressive-modulus`, {}, {
+    //   })
+    //   .then((response)=>{
+
+    //     setYAxisData(response.data)
+    //     setYAxisLabel("compressive-modulus")
+
+    //   })};
+    // },[yAxisLabel])
 
     useEffect(()=>{
-      if (xAxisLabel !== "X-Axis"  || yAxisLabel !== "Y-Axis"){
-      axios.get(`http://meta-genome.org:4000/MetF?label=${xAxisLabel}`)
+      if (xAxisLabel !== "X-Axis"  && yAxisLabel !== "Y-Axis"){
+
+      axios.get(`http://127.0.0.1:5000/get_vals/${xAxisLabel}`)
       .then((response)=>{
-        setXAxisData(response.data.response)
+
+        setXAxisData(response.data)
+
+        const xUnitArray =[]
+        const units = new Set(response.data
+          .filter(item => item[xAxisLabel][1]['units'] !== null) // Filter out items with null units
+          .map(item => item[xAxisLabel][1]['units']));
+          for(let item of units){
+            xUnitArray.push({keyword: item})
+          }
+          console.log("x unit array")
+          setXUnitsDropDownOptions(xUnitArray)
+
       })};
     },[xAxisLabel])
 
     useEffect(()=>{
-      if (xAxisLabel !== "X-Axis" || yAxisLabel !== "Y-Axis"){
-      axios.get(`http://meta-genome.org:4000/MetF?label=${yAxisLabel}`, {}, {
-        auth: {
-          username: "",
-          password: ""
-        }
+      if (xAxisLabel !== "X-Axis" && yAxisLabel !== "Y-Axis"){
+        
+      axios.get(`http://127.0.0.1:5000/get_vals/${yAxisLabel}`, {}, {
       })
       .then((response)=>{
-;        setYAxisData(response.data.response);
+
+;        setYAxisData(response.data);
+        console.log("YAXIS")
+        console.log(yAxisData)
+
+        const yUnitArray =[]
+        const units = new Set(response.data
+          .filter(item => item[yAxisLabel][1]['units'] !== null) // Filter out items with null units
+          .map(item => item[yAxisLabel][1]['units']));
+          for(let item of units){
+            yUnitArray.push({keyword: item})
+            //console.log("indiv unit - y")
+            //console.log(item)
+          }
+          console.log("y unit array")
+          console.log(yUnitArray)
+          setYUnitsDropDownOptions(yUnitArray)
+          setYAxisUnit(yUnitArray[0][0])
+
+        
       })};
     },[yAxisLabel])
 
+
+
     useEffect(()=>{
-      if (mfid.length !== 0) {
-      axios.get(`http://meta-genome.org:4000/MetF/${mfid}`)
+      if (met_id.length !== 0) {
+
+      axios.get(`http://127.0.0.1:5000/get_pub/${met_id}`)
       .then((response)=>{
-;        setpubDetails(response.data.response[0]);
-        console.log("POG")  
-        console.log(pubDetails)
+;        setpubDetails(response.data);
+
+
+         setimgURL(response.data.img)
+
   
       })};
-    },[mfid])
+    },[met_id])
 
-    // useEffect(()=> {
-    //   setpubDetails(getPubIds(mfid));
-    // },[])
 
+    useEffect(()=>{
+      
+      convert_data(yAxisData, yAxisLabel, yAxisUnit)
+      
+      console.log(yAxisUnit)
+      
+  
+    },[yAxisUnit])
 
     return (
 
@@ -149,38 +245,66 @@ function Home () {
     </div>  
 
     <div style={{width: '100%', height: height*0.7 , display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-    
-        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '480px', width: '50%'}}>
+      
         
-            <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '100%', width: '90%', backgroundColor: 'white', borderRadius: '25px'}}>
 
-              
-                <Dropdown open={true} menu={dropDownOptions.filter((option)=>{return option.keyword !== xAxisLabel && option.keyword !== yAxisLabel })} optionOnClick={setXAxisLabel} labelText={"X Axis"}/>
-                <Dropdown open={true} menu={dropDownOptions.filter((option)=>{return option.keyword !== xAxisLabel && option.keyword !== yAxisLabel })} optionOnClick={setYAxisLabel} labelText={"Y Axis"}/>
-                  
-          
-            </div>
-            
-        </div>
-        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '50%'}}>
+    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '480px', width: '50%'}}>
+    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', height: '100%', width: '95%', backgroundColor: 'white', borderRadius: '25px'}}>
+    <h1 style={{textAlign: 'center', margin: '20px 0'}}>MetaGenome Graph Customization</h1>
+    <p style={{textAlign: 'center', margin: '10px 0', marginBottom: '20px'}}>This graph present data from the Meta-genome database. Try changing the requested data to investigate material space!</p>
+    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%'}}>
 
+        <Dropdown open={true} menu={dropDownOptions.filter((option)=>{return option.keyword !== xAxisLabel && option.keyword !== yAxisLabel })} optionOnClick={setXAxisLabel} labelText={"X Axis"} style={{zIndex: 1}}/>
+        <Dropdown open={true} menu={xUnitsDropDownOptions.filter((option)=>{return option.keyword !== 0  })} optionOnClick={setXAxisUnit} labelText={"X Axis - units"} style={{zIndex: 0}}/>
+
+        <Dropdown open={true} menu={dropDownOptions.filter((option)=>{return option.keyword !== yAxisLabel && option.keyword !== xAxisLabel })} optionOnClick={setYAxisLabel} labelText={"Y Axis"} style={{zIndex: 1}}/>
+        <Dropdown open={true} menu={yUnitsDropDownOptions.filter((option)=>{return option.keyword})} optionOnClick={setYAxisUnit} labelText={"Y Axis - units"} style={{zIndex: 0}}/>
+    </div>
+    
+</div>
+
+</div>
+
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '480px', width: '50%'}}>
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '95%', backgroundColor: 'white', borderRadius: '25px'}}>
             <Plot
+              
                 data={[
-                {
-                    x: listToPlot.map((listElement)=>{return listElement.xAxis.mean_value}),
-                    y: listToPlot.map((listElement)=>{return listElement.yAxis.mean_value}),
+                  
+                  {
+                    x: listToPlot.map((listElement) => listElement.xAxis),
+                    y: listToPlot.map((listElement) => listElement.yAxis),
                     type: 'scatter',
                     mode: 'markers',
-                    marker: {color: 'teal'},
-                },
+                    marker: { color: 'orange' },
+                    name: 'Metamaterial', // add a name for the trace
+                    text : listToPlot.map(
+                      (listElement) =>
+                        `material type: ${listElement.mat_type}<br>X data type: ${listElement.xType}<br>Y data type: ${listElement.yType}`
+                    ),
+                  },
+                  {
+                    x: listToPlot.filter((listElement) => listElement.sub_type === 'base-material').map((listElement) => listElement.xAxis),
+                    y: listToPlot.filter((listElement) => listElement.sub_type === 'base-material').map((listElement) => listElement.yAxis),
+                    type: 'scatter',
+                    mode: 'markers',
+                    marker: { color: 'purple' },
+                    name: 'Base-material', // add a name for the trace
+                    text : listToPlot.map(
+                      (listElement) =>
+                        `material type: ${listElement.mat_type}<br>X data type: ${listElement.xType}<br>Y data type: ${listElement.yType}`
+                    ),
+                  },
+                
+              
                 
                 // {type: 'bar', x: [1, 2, 3], y: [2, 5, 3]},
                 ]}
-                layout={ {width: 640, height: 480, showlegend:true,
+                layout={ {width: 640, height: 480, showlegend:false,
                     // title: 'A Fancy Plot',
                 xaxis: {
                     title: {
-                      text: xAxisLabel,
+                      text: xAxisLabel + "  " + xAxisUnit,
                       font: {
                         family: '',
                         size: 16,
@@ -190,18 +314,20 @@ function Home () {
                   },
                   yaxis: {
                     title: {
-                      text: yAxisLabel,
+                      text: yAxisLabel + "  " + yAxisUnit,
                       font: {
                         family: '',
                         size: 16,
                         color: 'black'
                       }
                     }
-                  }} }
+                    
+                  }
+                } }
                   onClick={onPlotClick}
             />
         </div>
-
+        </div>
     </div>
 
 
@@ -211,25 +337,34 @@ function Home () {
         
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '480px', width: '50%'}}>
 
-        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '100%', width: '90%', backgroundColor: 'white', borderRadius: '25px'}}>
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '100%', width: '95%', backgroundColor: 'white', borderRadius: '25px'}}>
 
-        <div>
-          <p>some text</p>
-          </div>
+        <div style={{margin:"50px", justifyContent: 'center', alignItems: 'center', width: '90%'}}>
           
+          <h2 style={{display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center', borderRadius: '25px'}}>
+            image of metamaterial
+            </h2>
+            {imgURL && <img 
+              src={imgURL} 
+              alt="image" 
+              
+              style={{display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center', borderRadius: '25px'}}
+            />}
+            
+            
+          </div>
           </div>
           </div>
 
-        <div style={{display: 'flex', justifyContent: 'left', alignItems: 'center',height: '480px', width: '50%'}}>
+          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '480px', width: '50%'}}>
 
-        <div style={{display: 'flex', justifyContent: 'left', alignItems: 'center',height: '100%', width: '90%', backgroundColor: 'white', borderRadius: '25px'}}>
+          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '100%', width: '95%', backgroundColor: 'white', borderRadius: '25px'}}>
 
           <div style={{margin:"50px"}}>
           
-          <p>mf_id:  {mfid}</p>
-          <p>foam detail: {pubDetails.entry}</p>
+          <p>Meta-Genome ID:  {pubDetails.metaPid}</p>
           <p>{xAxisLabel}: {selectedData.x}</p>
-          <p>{xAxisLabel}: {selectedData.y}</p>
+          <p>{yAxisLabel}: {selectedData.y}</p>
           <p>authors: {pubDetails.authors}</p>
           <p>title: {pubDetails.title}</p>
           <p>journal: {pubDetails.journal}</p>

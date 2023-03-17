@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTwitter, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import "../Styles/Contact.css";
 import Logo from '../Assets/Metamaterial_genome_bird_Logo.png';
-
+import olly from '../Assets/Olly_img.jpg'
 
 const TeamMember = (props) => {
     return (
@@ -39,7 +39,7 @@ const Contact = () => {
     {
       name: 'Oliver Duncan',
       role: 'MetaMaterials expert',
-      picture: Logo,
+      picture: olly,
       social: [
         { name: 'LinkedIn', url: 'https:', icon: faLinkedin },
         { name: 'Twitter', url: 'https:', icon: faTwitter },
@@ -63,10 +63,11 @@ const Contact = () => {
       <div className="about-us-container">
       <h2 className="about-us-title">About Us</h2>
       <p className="about-us-text">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed commodo libero eget 
-        tincidunt tristique. Proin blandit varius diam, id fermentum nunc condimentum in. 
-        Nunc auctor, sapien eu bibendum commodo, tellus sapien tempor libero, at placerat 
-        libero erat eu magna.
+      The current leadership team includes Dr Stefan Szyniszewski, Dr Oliver Duncan, Dr Lukasz Kaczmarczyk 
+      and Prof Fabrizio Scarpa. We met through the UK MetaMaterials Network, and based on shared interests 
+      and complementary backgrounds, we have been planning and working on the meta-genome project since 2021. 
+      The project has been implemented and brilliantly executed by Dr Jacob Earnshaw, Jordan Byers and Nicholas 
+      Syrotiouk.
       </p>
     </div>
       <div className="team-list">
