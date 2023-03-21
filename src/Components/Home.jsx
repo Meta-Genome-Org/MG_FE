@@ -6,12 +6,13 @@ import removeNullsFromCombinedList from '../Utils/removeNullsFromCombinedList';
 //import searchListformet_id from '../Utils/searchListForID';
 import useWindowDimensions from '../Utils/useWindowDimensions';
 import Dropdown from './Dropdown';
-import convert_data from  '../Utils/convert_data';
+import convertData from  '../Utils/convertData';
+import swapData from '../Utils/swapData'
 import getPubIds from '../Utils/getPubData'
 import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import notFoundImage from '../Assets/not_found.png';
-
+import Logo from '../Assets/Meta-Genome-Logo.svg'
 
 
 function Home () {
@@ -45,18 +46,9 @@ function Home () {
     const [imgURL, setimgURL] = useState([])
 
     const onPlotClick = (data) => {
-      console.log("on click")
-      console.log(data)
-      console.log("list to plot on click")
-      console.log(listToPlot)
   setmet_id(listToPlot[data.points[0].pointIndex].met_id);
   setSelectedData(data.points[0]);};
 
-  useEffect(()=>{
-    // const [shorterArray, longerArraySnipped ] = truncateArray(xAxisData, yAxisData);
-    
-
-  },[])
 
     useEffect(()=>{
       
@@ -64,14 +56,13 @@ function Home () {
         })
       .then((response)=>{
         setDropDownOptions(response.data)
-        console.log("MEASURES_DROP")
-        console.log(dropDownOptions)
+        
       });
     },[])
 
 
     useEffect(()=>{
-      // const [shorterArray, longerArraySnipped ] = truncateArray(xAxisData, yAxisData);
+      
       const combinedXYDataArray = [];
       const xUnitsArray = [];
       const yUnitsArray = [];
@@ -89,75 +80,20 @@ function Home () {
             let id = yAxisData[i]['id'];
             let sub_type = yAxisData[i]['submission_type'];
             let mat_type = yAxisData[i]['sensitivity'];
-            console.log("Y AXIS")
-            console.log(yValues)
-            console.log("X AXIS")
-            console.log(xValues)
+            
             for (let yKey in yValues) {
               for (let xKey in xValues){
                 combinedXYDataArray.push({yAxis: yValues[yKey], yUnit: yUnits, xAxis: xValues[xKey], xUnit: xUnits, yType: yKey, xType: xKey, met_id: id, sub_type:sub_type, mat_type:mat_type}) 
-                console.log({yAxis: yValues[yKey], yUnit: yUnits, xAxis: xValues[xKey], xUnit: xUnits, yType: yKey, xType: xKey, met_id: id, sub_type:sub_type, mat_type:mat_type})
+                
             }
             
           }}}
-      
-      //console.log(combinedXYDataArray)
-      console.log("combined POS")
-      console.log(combinedXYDataArray)
+          
       setListToPlot(combinedXYDataArray)
-      console.log("list to plot")
-      console.log(listToPlot)
-
-      //setXAxisUnits(new Set(combinedXYDataArray.filter(item => item.xUnit !== null).map(item => item.xUnit)));
-      //setYAxisUnits(new Set(combinedXYDataArray.filter(item => item.yUnit !== null).map(item => item.yUnit)));
-      
-      // for (let xunits of xAxisUnits){
-      //   xUnitsArray.push({keyword: xunits})
-        
-      // }
-      // for (let yunits of yAxisUnits){
-      //   yUnitsArray.push({keyword: yunits})
-      //   //console.log("Y_UNIT")
-      //   //console.log(yunits)
-      // }
-
-      // setXUnitsToPlot(xUnitsArray)
-      // setYUnitsToPlot(yUnitsArray)
-      //console.log("Y_UNITS_")
-      //console.log(yUnitsToPlot)
-      //console.log(yAxisUnits)
-      //console.log("Y_DATA")
-      //console.log(yAxisData)
-      //console.log(yAxisUnits)
-      //setYAxisUnits(Set(combinedXYDataArray.map(item => item.yUnit)))
-      
+    
     }
     },[xAxisData, yAxisData])
 
-    // useEffect(()=>{
-    //   if (xAxisLabel == "X-Axis"){
-        
-    //   axios.get(`http://127.0.0.1:5000/get_vals/bulk-density`)
-    //   .then((response)=>{
-
-    //     setXAxisLabel("bulk-density")
-    //     setXAxisData(response.data)
-        
-    //   })};
-    // },[xAxisLabel])
-
-    // useEffect(()=>{
-    //   if (yAxisLabel == "Y-Axis"){
-
-    //   axios.get(`http://127.0.0.1:5000/get_vals/compressive-modulus`, {}, {
-    //   })
-    //   .then((response)=>{
-
-    //     setYAxisData(response.data)
-    //     setYAxisLabel("compressive-modulus")
-
-    //   })};
-    // },[yAxisLabel])
 
     useEffect(()=>{
       if (xAxisLabel !== "X-Axis"  && yAxisLabel !== "Y-Axis"){
@@ -165,18 +101,19 @@ function Home () {
       axios.get(`http://127.0.0.1:5000/get_vals/${xAxisLabel}`)
       .then((response)=>{
 
-        setXAxisData(response.data)
-
-        const xUnitArray =[]
-        const units = new Set(response.data
-          .filter(item => item[xAxisLabel][1]['units'] !== null) // Filter out items with null units
-          .map(item => item[xAxisLabel][1]['units']));
-          for(let item of units){
-            xUnitArray.push({keyword: item})
-          }
-          console.log("x unit array")
-          setXUnitsDropDownOptions(xUnitArray)
-
+        
+        const newData = convertData(response.data, xAxisLabel, xAxisUnit)
+        
+;        setXAxisData(newData.data);
+        
+        setXUnitsDropDownOptions(newData.units)
+        if (newData.units.keyword === null){
+          setXAxisUnit("")
+        }
+        else if(newData.units[0].keyword !== null){
+          setXAxisUnit(newData.units[1].keyword)
+}
+    console.log(xAxisData)
       })};
     },[xAxisLabel])
 
@@ -187,25 +124,19 @@ function Home () {
       })
       .then((response)=>{
 
-;        setYAxisData(response.data);
-        console.log("YAXIS")
-        console.log(yAxisData)
-
-        const yUnitArray =[]
-        const units = new Set(response.data
-          .filter(item => item[yAxisLabel][1]['units'] !== null) // Filter out items with null units
-          .map(item => item[yAxisLabel][1]['units']));
-          for(let item of units){
-            yUnitArray.push({keyword: item})
-            //console.log("indiv unit - y")
-            //console.log(item)
-          }
-          console.log("y unit array")
-          console.log(yUnitArray)
-          setYUnitsDropDownOptions(yUnitArray)
-          setYAxisUnit(yUnitArray[0][0])
-
+        const newData = convertData(response.data, yAxisLabel, yAxisUnit)
+        if (newData.units[0].keyword === null){
+          setYAxisUnit("")
+        }
+        else if(newData.units[0].keyword !== null){
+          
+          setYAxisUnit(newData.units[1].keyword)
+        }
         
+;        setYAxisData(newData.data);
+        
+        setYUnitsDropDownOptions(newData.units)
+       
       })};
     },[yAxisLabel])
 
@@ -216,153 +147,162 @@ function Home () {
 
       axios.get(`http://127.0.0.1:5000/get_pub/${met_id}`)
       .then((response)=>{
-;        setpubDetails(response.data);
 
+;        setpubDetails(response.data);
+        
+      axios.get(`http://127.0.0.1:5000/get_img/${response.data.img_pid}`).then((img_response)=>{
+        
+        console.log(img_response)
+      })
 
          setimgURL(response.data.img)
 
-  
-      })};
+      })
+    };
     },[met_id])
 
 
-    useEffect(()=>{
-      
-      convert_data(yAxisData, yAxisLabel, yAxisUnit)
-      
-      console.log(yAxisUnit)
-      
-  
-    },[yAxisUnit])
+    
+
+
 
     return (
 
       <>
     <div style={{width: '100%', height: useWindowDimensions()/10 , display: 'flex', justifyContent: 'center', alignItems: 'center', margin:10}}>
     <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '100%', width: '90%', backgroundColor: 'white', borderRadius: '25px'}}>
-        <h1>MetaMaterials Genome Project</h1>
+        <h1>Meta-Materials Genome Project</h1>
     </div>
     </div>  
 
-    <div style={{width: '100%', height: height*0.7 , display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-      
-        
+    <div style={{width: '100%', height: height*0.58 , display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px', width: '50%'}}>
+    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '95%', backgroundColor: 'white', borderRadius: '25px'}}>
+        <Plot
+          
+            data={[
+              
+              {
+                x: listToPlot.map((listElement) => listElement.xAxis),
+                y: listToPlot.map((listElement) => listElement.yAxis),
+                type: 'scatter',
+                mode: 'markers',
+                marker: { color: 'orange' },
+                name: 'Meta-material', // add a name for the trace
+                text : listToPlot.map(
+                  (listElement) =>
+                    `material type: ${listElement.mat_type}<br>X data type: ${listElement.xType}<br>Y data type: ${listElement.yType}`
+                ),
+              },
+              {
+                x: listToPlot.filter((listElement) => listElement.sub_type === 'base-material').map((listElement) => listElement.xAxis),
+                y: listToPlot.filter((listElement) => listElement.sub_type === 'base-material').map((listElement) => listElement.yAxis),
+                type: 'scatter',
+                mode: 'markers',
+                marker: { color: 'purple' },
+                name: 'Base-material', // add a name for the trace
+                text : listToPlot.map(
+                  (listElement) =>
+                    `material type: ${listElement.mat_type}<br>X data type: ${listElement.xType}<br>Y data type: ${listElement.yType}`
+                ),
+              },
+            
+          
+            
+            // {type: 'bar', x: [1, 2, 3], y: [2, 5, 3]},
+            ]}
+            layout={ {width: 640, height: 400, showlegend:true, title: {
+              text: 'Click on a point to explore',
+              font: {
+                size: 24,
+                color: 'black',
+                font: 'bold',
+              },
+            },
+                // title: 'A Fancy Plot',
+            xaxis: {
+                title: {
+                  text: xAxisLabel + "  " + "(" + xAxisUnit + ")",
+                  font: {
+                    family: '',
+                    size: 16,
+                    color: 'black'
+                  }
+                },
+              },
+              yaxis: {
+                title: {
+                  text: yAxisLabel + "  " + "(" + yAxisUnit + ")",
+                  font: {
+                    family: '',
+                    size: 16,
+                    color: 'black'
+                  }
+                }
+                
+              }
+            } }
+              onClick={onPlotClick}
+        />
+    </div>
+    </div>
 
-    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '480px', width: '50%'}}>
-    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', height: '100%', width: '95%', backgroundColor: 'white', borderRadius: '25px'}}>
-    <h1 style={{textAlign: 'center', margin: '20px 0'}}>MetaGenome Graph Customization</h1>
+
+    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px', width: '50%'}}>
+    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '100%', width: '95%', backgroundColor: 'white', borderRadius: '25px'}}>
+
+        <div style={{margin:"50px", justifyContent: 'center', alignItems: 'flex-start', width: '90%'}}>
+          
+          <h2 style={{display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'flex-start', borderRadius: '25px'}}>
+            image of meta-material
+            </h2>
+            <img
+  src={imgURL+"?auth=$"}
+  alt="image"
+  style={{display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center', borderRadius: '25px'}}
+  onError={(e) => {
+    e.target.onerror = null; // Prevents an infinite loop
+    e.target.src = Logo; // Set the URL of the fallback image
+    e.target.style.width = '50%'; // Set the width of the fallback image to 50%
+    e.target.style.height = '50%'; // Set the height of the fallback image to 50%
+    e.target.style.display = 'block'; // Set display to block
+    e.target.style.margin = 'auto'; // Center the image horizontally
+  }}
+/>
+            
+            
+          </div>
+          </div>
+    </div>
+
+    
+    </div>
+
+        <div style={{width: '100%', height: height*0.45 , display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+        
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '300px', width: '50%'}}>
+        
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', height: '100%', width: '95%', backgroundColor: 'white', borderRadius: '25px'}}>
+    <h1 style={{textAlign: 'center', margin: '20px 0'}}>Meta-Genome Graph Customization</h1>
     <p style={{textAlign: 'center', margin: '10px 0', marginBottom: '20px'}}>This graph present data from the Meta-genome database. Try changing the requested data to investigate material space!</p>
     <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%'}}>
 
         <Dropdown open={true} menu={dropDownOptions.filter((option)=>{return option.keyword !== xAxisLabel && option.keyword !== yAxisLabel })} optionOnClick={setXAxisLabel} labelText={"X Axis"} style={{zIndex: 1}}/>
-        <Dropdown open={true} menu={xUnitsDropDownOptions.filter((option)=>{return option.keyword !== 0  })} optionOnClick={setXAxisUnit} labelText={"X Axis - units"} style={{zIndex: 0}}/>
+        
 
         <Dropdown open={true} menu={dropDownOptions.filter((option)=>{return option.keyword !== yAxisLabel && option.keyword !== xAxisLabel })} optionOnClick={setYAxisLabel} labelText={"Y Axis"} style={{zIndex: 1}}/>
-        <Dropdown open={true} menu={yUnitsDropDownOptions.filter((option)=>{return option.keyword})} optionOnClick={setYAxisUnit} labelText={"Y Axis - units"} style={{zIndex: 0}}/>
+        
     </div>
-    
-</div>
-
-</div>
-
-        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '480px', width: '50%'}}>
-        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '95%', backgroundColor: 'white', borderRadius: '25px'}}>
-            <Plot
-              
-                data={[
-                  
-                  {
-                    x: listToPlot.map((listElement) => listElement.xAxis),
-                    y: listToPlot.map((listElement) => listElement.yAxis),
-                    type: 'scatter',
-                    mode: 'markers',
-                    marker: { color: 'orange' },
-                    name: 'Metamaterial', // add a name for the trace
-                    text : listToPlot.map(
-                      (listElement) =>
-                        `material type: ${listElement.mat_type}<br>X data type: ${listElement.xType}<br>Y data type: ${listElement.yType}`
-                    ),
-                  },
-                  {
-                    x: listToPlot.filter((listElement) => listElement.sub_type === 'base-material').map((listElement) => listElement.xAxis),
-                    y: listToPlot.filter((listElement) => listElement.sub_type === 'base-material').map((listElement) => listElement.yAxis),
-                    type: 'scatter',
-                    mode: 'markers',
-                    marker: { color: 'purple' },
-                    name: 'Base-material', // add a name for the trace
-                    text : listToPlot.map(
-                      (listElement) =>
-                        `material type: ${listElement.mat_type}<br>X data type: ${listElement.xType}<br>Y data type: ${listElement.yType}`
-                    ),
-                  },
-                
-              
-                
-                // {type: 'bar', x: [1, 2, 3], y: [2, 5, 3]},
-                ]}
-                layout={ {width: 640, height: 480, showlegend:false,
-                    // title: 'A Fancy Plot',
-                xaxis: {
-                    title: {
-                      text: xAxisLabel + "  " + xAxisUnit,
-                      font: {
-                        family: '',
-                        size: 16,
-                        color: 'black'
-                      }
-                    },
-                  },
-                  yaxis: {
-                    title: {
-                      text: yAxisLabel + "  " + yAxisUnit,
-                      font: {
-                        family: '',
-                        size: 16,
-                        color: 'black'
-                      }
-                    }
-                    
-                  }
-                } }
-                  onClick={onPlotClick}
-            />
-        </div>
-        </div>
+    </div>
     </div>
 
-
-    {selectedData.x && selectedData.y && (
-        
-        <div style={{width: '100%', height: height*0.7 , display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-        
-        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '480px', width: '50%'}}>
-
-        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '100%', width: '95%', backgroundColor: 'white', borderRadius: '25px'}}>
-
-        <div style={{margin:"50px", justifyContent: 'center', alignItems: 'center', width: '90%'}}>
-          
-          <h2 style={{display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center', borderRadius: '25px'}}>
-            image of metamaterial
-            </h2>
-            {imgURL && <img 
-              src={imgURL} 
-              alt="image" 
-              
-              style={{display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center', borderRadius: '25px'}}
-            />}
-            
-            
-          </div>
-          </div>
-          </div>
-
-          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '480px', width: '50%'}}>
+          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '300px', width: '50%'}}>
 
           <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '100%', width: '95%', backgroundColor: 'white', borderRadius: '25px'}}>
 
           <div style={{margin:"50px"}}>
           
-          <p>Meta-Genome ID:  {pubDetails.metaPid}</p>
+          <p><a href={pubDetails.metaPid}>Link to submitted data</a></p>
           <p>{xAxisLabel}: {selectedData.x}</p>
           <p>{yAxisLabel}: {selectedData.y}</p>
           <p>authors: {pubDetails.authors}</p>
@@ -376,11 +316,12 @@ function Home () {
           </div>
           </div>
           </div>
-      )}
+      
       
 
 
     </>
+    
     );
   }
   

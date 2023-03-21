@@ -1,11 +1,14 @@
 
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTwitter, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import { faTwitter, faLinkedin, faOrcid, faUser } from '@fortawesome/free-brands-svg-icons';
 import "../Styles/Contact.css";
-import Logo from '../Assets/Metamaterial_genome_bird_Logo.png';
+import Logo from '../Assets/Meta-Genome-Logo.svg';
 import olly from '../Assets/Olly_img.jpg'
-
+import nick from '../Assets/Syrotiuk_square.png'
+import jordan from '../Assets/Jordan.png'
+import stefan from '../Assets/Stefan1.jpg'
+import fabrizio from '../Assets/Fabrizio.jpg'
 const TeamMember = (props) => {
     return (
         <div className="team-member">
@@ -29,16 +32,17 @@ const Contact = () => {
         
         name: 'Stefan Szyniszewski',
       role: 'Project Lead',
-      picture: Logo,
+      picture: stefan,
       
       social: [
-        { name: 'LinkedIn', url: 'https://', icon: faLinkedin },
-        { name: 'Twitter', url: 'https://', icon: faTwitter },
+        { name: 'LinkedIn', url: 'https://orcid.org/0000-0002-7862-8506', icon: faOrcid },
+        { name: 'Twitter', url: 'https://twitter.com/stefanszynisz?lang=en', icon: faTwitter },
+        {name: 'orcid', url: 'https://www.linkedin.com/in/stefan-szyniszewski/?originalSubdomain=uk', icon: faLinkedin}
       ],
     },
     {
       name: 'Oliver Duncan',
-      role: 'MetaMaterials expert',
+      role: 'Meta-Materials expert',
       picture: olly,
       social: [
         { name: 'LinkedIn', url: 'https:', icon: faLinkedin },
@@ -50,8 +54,45 @@ const Contact = () => {
         role: 'Finite Element Expert',
         picture: Logo,
         social: [
-          { name: 'LinkedIn', url: 'https://linkedin.com/janedoe', icon: faLinkedin },
-          { name: 'Twitter', url: 'https://twitter.com/janedoe', icon: faTwitter },
+          { name: 'LinkedIn', url: '', icon: faLinkedin },
+          { name: 'Twitter', url: '', icon: faTwitter },
+        ],
+      },
+      {
+        name: 'Fabrizio Scarpa',
+        role: 'Meta-Materials Expert',
+        picture: fabrizio,
+        social: [
+          { name: 'LinkedIn', url: 'https://www.linkedin.com/in/fabrizio-scarpa-36538514/', icon: faLinkedin },
+          { name: 'Twitter', url: 'https://twitter.com/flago2009', icon: faTwitter },
+          { name : 'Orcid', url: 'https://orcid.org/0000-0002-5470-4834', icon: faOrcid}
+        ],
+      },
+      {
+        name: 'Nicholas Syrotiuk',
+        role: 'Database expert',
+        picture: nick,
+        social: [
+          { name: 'LinkedIn', url: 'https://orcid.org/0000-0002-7367-4976', icon: faOrcid },
+          { name: 'Twitter', url: 'https://twitter.com/DurhamRdm', icon: faTwitter },
+        ],
+      },
+      {
+        name: 'Jordan Byers',
+        role: 'Finite Element Expert',
+        picture: jordan,
+        social: [
+          { name: 'LinkedIn', url: '', icon: faLinkedin },
+          { name: 'Twitter', url: '', icon: faTwitter },
+        ],
+      },
+      {
+        name: 'Jacob Earnshaw',
+        role: 'Postdoc Researcher',
+        picture: Logo,
+        social: [
+          { name: 'LinkedIn', url: '', icon: faLinkedin },
+          { name: 'Twitter', url: '', icon: faTwitter },
         ],
       },
       
@@ -65,7 +106,9 @@ const Contact = () => {
       <p className="about-us-text">
       The current leadership team includes Dr Stefan Szyniszewski, Dr Oliver Duncan, Dr Lukasz Kaczmarczyk 
       and Prof Fabrizio Scarpa. We met through the UK MetaMaterials Network, and based on shared interests 
-      and complementary backgrounds, we have been planning and working on the meta-genome project since 2021. 
+      and complementary backgrounds.<p/>
+      
+      We have been planning and working on the meta-genome project since 2021. 
       The project has been implemented and brilliantly executed by Dr Jacob Earnshaw, Jordan Byers and Nicholas 
       Syrotiouk.
       </p>
