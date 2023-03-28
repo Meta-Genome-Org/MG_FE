@@ -5,11 +5,10 @@ function convertData(jsonData, keyword, desiredUnit) {
       keyword === "yield-strength" || keyword === "ultimate-yield-strength"){
 
         if (desiredUnit === ""){
-          //console.log("WORKING!")
+
           desiredUnit = "MPa"
         }
-        //console.log("KEYWORD")
-        //console.log(keyword)
+
         const conversionFactors = [{
           KPa : {KPa: 1, MPa: 0.001, GPa: 0.000001},
           MPa : {KPa: 1000, MPa: 1, GPa: 0.001},
@@ -77,9 +76,12 @@ function convertData(jsonData, keyword, desiredUnit) {
       }
 
 
-      else if (keyword === "couple-constant" || keyword === "compressive-poissons" || keyword === "tensile-poissons-ratio"){
+      else if (keyword === "couple-constant" || keyword === "compressive-poissons-ratio" || keyword === "tensile-poissons-ratio"){
 
         const avail_datas = [{keyword: null}]
+        
+        
+
 
         return {data: jsonData, units: avail_datas};
       }

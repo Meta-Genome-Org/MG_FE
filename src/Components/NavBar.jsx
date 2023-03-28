@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import Logo from '../Assets/Meta-Genome-Logo.svg' ;
+import Logo from '../Assets/meta_gemone_logo_blue.png' ;
 
 const styles = {
   hover: {

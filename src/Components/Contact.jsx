@@ -9,6 +9,9 @@ import nick from '../Assets/Syrotiuk_square.png'
 import jordan from '../Assets/Jordan.png'
 import stefan from '../Assets/Stefan1.jpg'
 import fabrizio from '../Assets/Fabrizio.jpg'
+import lukasz from '../Assets/Lukasz.png'
+
+
 const TeamMember = (props) => {
     return (
         <div className="team-member">
@@ -52,10 +55,10 @@ const Contact = () => {
     {
         name: 'Lukasz Kaczmarczyk',
         role: 'Finite Element Expert',
-        picture: Logo,
+        picture: lukasz,
         social: [
-          { name: 'LinkedIn', url: '', icon: faLinkedin },
-          { name: 'Twitter', url: '', icon: faTwitter },
+          { name: 'LinkedIn', url: 'https://orcid.org/0000-0002-8468-5435', icon: faLinkedin },
+          
         ],
       },
       {

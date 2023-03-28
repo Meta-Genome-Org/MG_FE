@@ -1,18 +1,10 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Plot from 'react-plotly.js';
-import getListEntryByID from '../Utils/getListEntryByID';
-import removeNullsFromCombinedList from '../Utils/removeNullsFromCombinedList';
-//import searchListformet_id from '../Utils/searchListForID';
 import useWindowDimensions from '../Utils/useWindowDimensions';
 import Dropdown from './Dropdown';
 import convertData from  '../Utils/convertData';
-import swapData from '../Utils/swapData'
-import getPubIds from '../Utils/getPubData'
-import * as THREE from 'three';
-import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
-import notFoundImage from '../Assets/not_found.png';
-import Logo from '../Assets/Meta-Genome-Logo.svg'
+import Logo from '../Assets/meta_gemone_logo_blue.png'
 
 
 function Home () {
@@ -21,8 +13,6 @@ function Home () {
     const [xAxisLabel, setXAxisLabel] = useState("bulk-density");
     const [yAxisLabel, setYAxisLabel] = useState("compressive-modulus");
 
-    const pascalList = []
-
     const [xAxisUnit, setXAxisUnit] = useState(['kg/m\u00b3']);
     const [yAxisUnit, setYAxisUnit] = useState(["MPa"]);
 
@@ -30,9 +20,6 @@ function Home () {
     const [yAxisData, setYAxisData] = useState([]);
 
     const [listToPlot, setListToPlot] = useState([]);
-
-    const [xUnitsToPlot, setXUnitsToPlot] = useState([]);
-    const [yUnitsToPlot, setYUnitsToPlot] = useState([]);
 
     const [dropDownOptions, setDropDownOptions] = useState([]);
 
@@ -47,12 +34,13 @@ function Home () {
 
     const onPlotClick = (data) => {
   setmet_id(listToPlot[data.points[0].pointIndex].met_id);
+  setimgURL(null)
   setSelectedData(data.points[0]);};
 
 
     useEffect(()=>{
       
-      axios.get('http://127.0.0.1:5000/avail_data', {}, {
+      axios.get('https://api.meta-genome.org/avail_data', {}, {
         })
       .then((response)=>{
         setDropDownOptions(response.data)
@@ -64,8 +52,7 @@ function Home () {
     useEffect(()=>{
       
       const combinedXYDataArray = [];
-      const xUnitsArray = [];
-      const yUnitsArray = [];
+      
 
       if(xAxisData.length > 0 && yAxisData.length > 0 ){
 
@@ -98,7 +85,7 @@ function Home () {
     useEffect(()=>{
       if (xAxisLabel !== "X-Axis"  && yAxisLabel !== "Y-Axis"){
 
-      axios.get(`http://127.0.0.1:5000/get_vals/${xAxisLabel}`)
+      axios.get(`https://api.meta-genome.org/get_vals/${xAxisLabel}`)
       .then((response)=>{
 
         
@@ -107,7 +94,7 @@ function Home () {
 ;        setXAxisData(newData.data);
         
         setXUnitsDropDownOptions(newData.units)
-        if (newData.units.keyword === null){
+        if (newData.units[0].keyword === null){
           setXAxisUnit("")
         }
         else if(newData.units[0].keyword !== null){
@@ -120,13 +107,13 @@ function Home () {
     useEffect(()=>{
       if (xAxisLabel !== "X-Axis" && yAxisLabel !== "Y-Axis"){
         
-      axios.get(`http://127.0.0.1:5000/get_vals/${yAxisLabel}`, {}, {
+      axios.get(`https://api.meta-genome.org/get_vals/${yAxisLabel}`, {}, {
       })
       .then((response)=>{
 
         const newData = convertData(response.data, yAxisLabel, yAxisUnit)
         if (newData.units[0].keyword === null){
-          setYAxisUnit("")
+          setYAxisUnit("unitless")
         }
         else if(newData.units[0].keyword !== null){
           
@@ -144,20 +131,30 @@ function Home () {
 
     useEffect(()=>{
       if (met_id.length !== 0) {
+        try{
+          axios.get(`https://api.meta-genome.org/get_pub/${met_id}`)
+          .then((response)=>{
+    
+    ;       setpubDetails(response.data);
+            
+            console.log(response.data.img)
+            if (response.data.img === ""){
+              setimgURL(null)
+            }
+           
+            else{
+            setimgURL(response.data.img)
+          }
+          }
+          )
+        }
+        catch(err){
 
-      axios.get(`http://127.0.0.1:5000/get_pub/${met_id}`)
-      .then((response)=>{
+          setimgURL(null)
+        }
 
-;        setpubDetails(response.data);
-        
-      axios.get(`http://127.0.0.1:5000/get_img/${response.data.img_pid}`).then((img_response)=>{
-        
-        console.log(img_response)
-      })
 
-         setimgURL(response.data.img)
-
-      })
+      
     };
     },[met_id])
 
@@ -253,13 +250,12 @@ function Home () {
 
         <div style={{margin:"50px", justifyContent: 'center', alignItems: 'flex-start', width: '90%'}}>
           
-          <h2 style={{display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'flex-start', borderRadius: '25px'}}>
-            image of meta-material
-            </h2>
+          
             <img
   src={imgURL+"?auth=$"}
   alt="image"
   style={{display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center', borderRadius: '25px'}}
+  
   onError={(e) => {
     e.target.onerror = null; // Prevents an infinite loop
     e.target.src = Logo; // Set the URL of the fallback image
@@ -302,7 +298,8 @@ function Home () {
 
           <div style={{margin:"50px"}}>
           
-          <p><a href={pubDetails.metaPid}>Link to submitted data</a></p>
+          <p><a href={pubDetails.metaPid} target="_blank">Link to submitted data</a></p>
+
           <p>{xAxisLabel}: {selectedData.x}</p>
           <p>{yAxisLabel}: {selectedData.y}</p>
           <p>authors: {pubDetails.authors}</p>
