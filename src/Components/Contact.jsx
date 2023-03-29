@@ -105,8 +105,8 @@ const Contact = () => {
     <div className="team-page">
       
       <div className="about-us-container">
-      <h2 className="about-us-title">About Us</h2>
-      <p className="about-us-text">
+      <h2 className="about-us-title" style={{ fontFamily:"Lato"}}>About Us</h2>
+      <p className="about-us-text"style={{ fontFamily:"Lato"}}>
       The current leadership team includes Dr Stefan Szyniszewski, Dr Oliver Duncan, Dr Lukasz Kaczmarczyk 
       and Prof Fabrizio Scarpa. We met through the UK MetaMaterials Network, and based on shared interests 
       and complementary backgrounds.<p/>

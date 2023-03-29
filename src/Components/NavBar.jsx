@@ -20,16 +20,16 @@ function NavBar () {
     
       
       <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-around', width: '60%'}}>
-        <Link to="/Home" style={{textAlign: 'center', margin: '0', color: 'black', textDecoration: 'none', fontSize: '20px'}}>
+        <Link to="/Home" style={{textAlign: 'center', margin: '0', color: 'black', textDecoration: 'none', fontSize: '20px', fontFamily:"Lato"}}>
           Home
         </Link>
-        <Link to="http://portal.meta-genome.org/" style={{textAlign: 'center', margin: '0', color: 'black', textDecoration: 'none', fontSize: '20px'}}>
+        <Link to="http://portal.meta-genome.org/" style={{textAlign: 'center', margin: '0', color: 'black', textDecoration: 'none', fontSize: '20px', fontFamily:"Lato"}}>
           Contribute
         </Link>
-        <Link to="/Virtual Lab" style={{textAlign: 'center', margin: '0', color: 'black', textDecoration: 'none', fontSize: '20px'}}>
+        <Link to="/Virtual Lab" style={{textAlign: 'center', margin: '0', color: 'black', textDecoration: 'none', fontSize: '20px', fontFamily:"Lato"}}>
           Virtual Lab
         </Link>
-        <Link to="/Contact us" style={{textAlign: 'center', margin: '0', color: 'black', textDecoration: 'none', fontSize: '20px' }}>
+        <Link to="/Contact us" style={{textAlign: 'center', margin: '0', color: 'black', textDecoration: 'none', fontSize: '20px', fontFamily:"Lato" }}>
           Contact us
         </Link>
         {/* <Link to="/Contribute" style={{textAlign: 'center', margin: '0', color: 'black', textDecoration: 'none'}}>

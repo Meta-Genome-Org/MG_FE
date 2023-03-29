@@ -5,7 +5,7 @@ import useWindowDimensions from '../Utils/useWindowDimensions';
 import Dropdown from './Dropdown';
 import convertData from  '../Utils/convertData';
 import Logo from '../Assets/meta_gemone_logo_blue.png'
-
+import "@fontsource/lato";
 
 function Home () {
     const { height, } = useWindowDimensions();
@@ -32,6 +32,7 @@ function Home () {
     const [pubDetails, setpubDetails] = useState([]);
     const [imgURL, setimgURL] = useState([])
 
+    
     const onPlotClick = (data) => {
   setmet_id(listToPlot[data.points[0].pointIndex].met_id);
   setimgURL(null)
@@ -88,7 +89,6 @@ function Home () {
       axios.get(`https://api.meta-genome.org/get_vals/${xAxisLabel}`)
       .then((response)=>{
 
-        
         const newData = convertData(response.data, xAxisLabel, xAxisUnit)
         
 ;        setXAxisData(newData.data);
@@ -151,30 +151,25 @@ function Home () {
         catch(err){
 
           setimgURL(null)
-        }
-
-
-      
+        }  
     };
     },[met_id])
 
 
     
 
-
-
     return (
 
       <>
     <div style={{width: '100%', height: useWindowDimensions()/10 , display: 'flex', justifyContent: 'center', alignItems: 'center', margin:10}}>
-    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '100%', width: '90%', backgroundColor: 'white', borderRadius: '25px'}}>
+    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '100%', width: '90%', backgroundColor: 'white', borderRadius: '0px', fontFamily:"Lato"}}>
         <h1>Meta-Materials Genome Project</h1>
     </div>
     </div>  
 
     <div style={{width: '100%', height: height*0.58 , display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
     <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px', width: '50%'}}>
-    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '95%', backgroundColor: 'white', borderRadius: '25px'}}>
+    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '95%', backgroundColor: 'white', borderRadius: '0px'}}>
         <Plot
           
             data={[
@@ -206,7 +201,6 @@ function Home () {
             
           
             
-            // {type: 'bar', x: [1, 2, 3], y: [2, 5, 3]},
             ]}
             layout={ {width: 640, height: 400, showlegend:true, title: {
               text: 'Click on a point to explore',
@@ -214,16 +208,18 @@ function Home () {
                 size: 24,
                 color: 'black',
                 font: 'bold',
+                fontFamily:"Lato"
               },
             },
-                // title: 'A Fancy Plot',
             xaxis: {
                 title: {
                   text: xAxisLabel + "  " + "(" + xAxisUnit + ")",
                   font: {
                     family: '',
                     size: 16,
-                    color: 'black'
+                    color: 'black', 
+                    fontFamily:"Lato"
+                    
                   }
                 },
               },
@@ -233,7 +229,8 @@ function Home () {
                   font: {
                     family: '',
                     size: 16,
-                    color: 'black'
+                    color: 'black',
+                   fontFamily:"Lato"
                   }
                 }
                 
@@ -246,46 +243,44 @@ function Home () {
 
 
     <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px', width: '50%'}}>
-    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '100%', width: '95%', backgroundColor: 'white', borderRadius: '25px'}}>
+    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '100%', width: '95%', backgroundColor: 'white', borderRadius: '0px'}}>
 
         <div style={{margin:"50px", justifyContent: 'center', alignItems: 'flex-start', width: '90%'}}>
-          
-          
             <img
   src={imgURL+"?auth=$"}
-  alt="image"
-  style={{display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center', borderRadius: '25px'}}
+  
+  style={{display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center', borderRadius: '0px'}}
   
   onError={(e) => {
-    e.target.onerror = null; // Prevents an infinite loop
-    e.target.src = Logo; // Set the URL of the fallback image
-    e.target.style.width = '50%'; // Set the width of the fallback image to 50%
-    e.target.style.height = '50%'; // Set the height of the fallback image to 50%
-    e.target.style.display = 'block'; // Set display to block
-    e.target.style.margin = 'auto'; // Center the image horizontally
+    e.target.onerror = null; 
+    e.target.src = Logo; 
+    e.target.style.width = '50%'; 
+    e.target.style.height = '50%'; 
+    e.target.style.display = 'block';
+    e.target.style.margin = 'auto'; 
   }}
-/>
-            
-            
-          </div>
-          </div>
+/>    
+    </div>
+    </div>
     </div>
 
     
     </div>
 
-        <div style={{width: '100%', height: height*0.45 , display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-        
-        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '300px', width: '50%'}}>
-        
-        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', height: '100%', width: '95%', backgroundColor: 'white', borderRadius: '25px'}}>
-    <h1 style={{textAlign: 'center', margin: '20px 0'}}>Meta-Genome Graph Customization</h1>
-    <p style={{textAlign: 'center', margin: '10px 0', marginBottom: '20px'}}>This graph present data from the Meta-genome database. Try changing the requested data to investigate material space!</p>
+    <div style={{width: '100%', height: height*0.45 , display: 'flex', justifyContent: 'center', alignItems: 'center'}}>    
+    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '300px', width: '50%'}}>
+    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', height: '100%', width: '95%', backgroundColor: 'white', borderRadius: '0px'}}>
+    
+    <h2 style={{textAlign: 'center', margin: '20px 0', fontFamily:"Lato"}}>
+      Meta-Genome Graph Customization
+      </h2>
+    <p style={{textAlign: 'center', margin: '10px 0', marginBottom: '20px', fontFamily:"Lato"}}>
+      This graph present data from the Meta-genome database. Try changing the requested data to investigate material space!
+      </p>
+
     <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%'}}>
 
         <Dropdown open={true} menu={dropDownOptions.filter((option)=>{return option.keyword !== xAxisLabel && option.keyword !== yAxisLabel })} optionOnClick={setXAxisLabel} labelText={"X Axis"} style={{zIndex: 1}}/>
-        
-
         <Dropdown open={true} menu={dropDownOptions.filter((option)=>{return option.keyword !== yAxisLabel && option.keyword !== xAxisLabel })} optionOnClick={setYAxisLabel} labelText={"Y Axis"} style={{zIndex: 1}}/>
         
     </div>
@@ -294,9 +289,9 @@ function Home () {
 
           <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '300px', width: '50%'}}>
 
-          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '100%', width: '95%', backgroundColor: 'white', borderRadius: '25px'}}>
+          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '100%', width: '95%', backgroundColor: 'white', borderRadius: '0px'}}>
 
-          <div style={{margin:"50px"}}>
+          <div style={{margin:"50px", fontFamily:"Lato"}}>
           
           <p><a href={pubDetails.metaPid} target="_blank">Link to submitted data</a></p>
 

@@ -6,7 +6,7 @@ import "../Styles/Footer.css";
 function Footer() {
     return (
       <div className="footer">
-        <p>In collaboration with:</p>
+        <p>Supported and trusted by:</p>
         <div className="associates">
           <img src={royce} alt="Royce Institute" />
           <img src={ukmmn} alt="UKMMN" />

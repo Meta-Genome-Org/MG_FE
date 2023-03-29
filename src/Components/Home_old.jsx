@@ -29,33 +29,10 @@ function Home () {
 
     const onPlotClick = (data) => {
   setmfid(listToPlot[data.points[0].pointIndex].xAxis.mf_id);
-  // axios.post('http://localhost:4000/QueryDataBase', {"SQL" : "SELECT authors, title, journal, year FROM MetF_References WHERE mf_id = ${mfid}"})
-  //     .then((response)=>{
-  //       (setpubDetails(response.data[0]))
-  //     });
-
-  // getPubIds(mfid).then(() => {
-  //   setpubDetails(getPubIds(mfid))
-  //   console.log("PUB DETAILS");
-  //   console.log(pubDetails);
-    
-  // });
+ 
   setSelectedData(data.points[0]);
 };
-    
-    
-
-
-    
-    // function truncateArray(arr1, arr2) {
-    //   let shorterArray = arr1.length < arr2.length ? arr1 : arr2;
-    //   let longerArray = arr1.length >= arr2.length ? arr2 : arr1;
-    
-    //   let shorterIds = shorterArray.map(item => item.mf_id);
-    //   let longerArraySnipped = longerArray.filter(item => shorterIds.includes(item.mf_id));
-    //   return [shorterArray, longerArraySnipped]
-
-    // }
+  
 
 
 
@@ -63,14 +40,13 @@ function Home () {
       axios.get('http://127.0.0.1:4000/getkeys', {}, {
         })
       .then((response)=>{
-        console.log(response.data.response)
         setDropDownOptions(response.data.response)
       });
     },[])
 
 
     useEffect(()=>{
-      // const [shorterArray, longerArraySnipped ] = truncateArray(xAxisData, yAxisData);
+
       const combinedXYDataArray = [];
       if(xAxisData.length > yAxisData.length){
         for(let i = 0; i < yAxisData.length; i++){
@@ -86,10 +62,9 @@ function Home () {
           }
         }
       }
-      console.log("COMBINED")
       console.log(combinedXYDataArray)
       setListToPlot(removeNullsFromCombinedList(combinedXYDataArray));
-      console.log("LIST_TO_PLOT")
+
       console.log(listToPlot)
     },[xAxisData, yAxisData])
 
@@ -124,9 +99,6 @@ function Home () {
       })};
     },[mfid])
 
-    // useEffect(()=> {
-    //   setpubDetails(getPubIds(mfid));
-    // },[])
 
 
     return (
