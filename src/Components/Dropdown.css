@@ -3,6 +3,7 @@
     background-color: teal;
     margin-right: 10px;
     margin-bottom: 80px;
+    z-index: 10;
   }
   
   .menu {
@@ -12,6 +13,7 @@
     padding: 0;
     border: 1px solid grey;
     width: 150px;
+    z-index: 100;
   }
   
   .menu > li {

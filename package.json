@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@fontsource/lato": "^4.5.10",
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "@fortawesome/free-brands-svg-icons": "^6.2.1",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
@@ -23,6 +24,7 @@
     "react-scripts": "5.0.1",
     "sql.js": "^1.8.0",
     "sqlite3": "^5.1.4",
+    "three": "^0.150.1",
     "web-vitals": "^2.1.4"
   },
   "browser": {
@@ -51,5 +53,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "lato-font": "^3.0.0"
   }
 }

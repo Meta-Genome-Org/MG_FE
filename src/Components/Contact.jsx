@@ -1,9 +1,15 @@
 
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTwitter, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import { faTwitter, faLinkedin, faOrcid, faUser } from '@fortawesome/free-brands-svg-icons';
 import "../Styles/Contact.css";
-import Logo from '../Assets/Metamaterial_genome_bird_Logo.png';
+import Logo from '../Assets/Meta-Genome-Logo.svg';
+import olly from '../Assets/Olly_img.jpg'
+import nick from '../Assets/Syrotiuk_square.png'
+import jordan from '../Assets/Jordan.png'
+import stefan from '../Assets/Stefan1.jpg'
+import fabrizio from '../Assets/Fabrizio.jpg'
+import lukasz from '../Assets/Lukasz.png'
 
 
 const TeamMember = (props) => {
@@ -12,6 +18,7 @@ const TeamMember = (props) => {
           <img src={props.picture} alt="BROKEN PROP" />
           <h3>{props.name}</h3>
           <p>{props.role}</p>
+          <a href={`mailto:${props.email}`} style={{color: 'blue'}}>@ Email</a>
           <div className="social-media">
             {props.social.map((social, index) => (
               <a href={social.url} key={index}>
@@ -29,17 +36,19 @@ const Contact = () => {
         
         name: 'Stefan Szyniszewski',
       role: 'Project Lead',
-      picture: Logo,
-      
+      picture: stefan,
+      email: "stefan.t.szyniszewski@durham.ac.uk",
       social: [
-        { name: 'LinkedIn', url: 'https://', icon: faLinkedin },
-        { name: 'Twitter', url: 'https://', icon: faTwitter },
+        { name: 'LinkedIn', url: 'https://orcid.org/0000-0002-7862-8506', icon: faOrcid },
+        { name: 'Twitter', url: 'https://twitter.com/stefanszynisz?lang=en', icon: faTwitter },
+        {name: 'orcid', url: 'https://www.linkedin.com/in/stefan-szyniszewski/?originalSubdomain=uk', icon: faLinkedin}
       ],
     },
     {
       name: 'Oliver Duncan',
-      role: 'MetaMaterials expert',
-      picture: Logo,
+      role: 'Meta-Materials expert',
+      picture: olly,
+      email: "O.duncan@mmu.ac.uk",
       social: [
         { name: 'LinkedIn', url: 'https:', icon: faLinkedin },
         { name: 'Twitter', url: 'https:', icon: faTwitter },
@@ -48,10 +57,52 @@ const Contact = () => {
     {
         name: 'Lukasz Kaczmarczyk',
         role: 'Finite Element Expert',
+        picture: lukasz,
+        email: "lukasz.kaczmarczyk@glasgow.ac.uk",
+        social: [
+          { name: 'LinkedIn', url: 'https://orcid.org/0000-0002-8468-5435', icon: faLinkedin },
+          
+        ],
+      },
+      {
+        name: 'Fabrizio Scarpa',
+        role: 'Meta-Materials Expert',
+        picture: fabrizio,
+        email: "f.scarpa@bristol.ac.uk",
+        social: [
+          { name: 'LinkedIn', url: 'https://www.linkedin.com/in/fabrizio-scarpa-36538514/', icon: faLinkedin },
+          { name: 'Twitter', url: 'https://twitter.com/flago2009', icon: faTwitter },
+          { name : 'Orcid', url: 'https://orcid.org/0000-0002-5470-4834', icon: faOrcid}
+        ],
+      },
+      {
+        name: 'Nicholas Syrotiuk',
+        role: 'Database expert',
+        picture: nick,
+        email: "nicholas.syrotiuk@durham.ac.uk",
+        social: [
+          { name: 'LinkedIn', url: 'https://orcid.org/0000-0002-7367-4976', icon: faOrcid },
+          { name: 'Twitter', url: 'https://twitter.com/DurhamRdm', icon: faTwitter },
+        ],
+      },
+      {
+        name: 'Jordan Byers',
+        role: 'Finite Element Expert',
+        picture: jordan,
+        email: "jordan.byers@durham.ac.uk",
+        social: [
+          { name: 'LinkedIn', url: '', icon: faLinkedin },
+          { name: 'Twitter', url: '', icon: faTwitter },
+        ],
+      },
+      {
+        name: 'Jacob Earnshaw',
+        role: 'Postdoc Researcher',
+        email: "jacob-earnshaw@hotmail.co.uk",
         picture: Logo,
         social: [
-          { name: 'LinkedIn', url: 'https://linkedin.com/janedoe', icon: faLinkedin },
-          { name: 'Twitter', url: 'https://twitter.com/janedoe', icon: faTwitter },
+          { name: 'LinkedIn', url: '', icon: faLinkedin },
+          { name: 'Twitter', url: '', icon: faTwitter },
         ],
       },
       
@@ -60,13 +111,16 @@ const Contact = () => {
   return (
     <div className="team-page">
       
-      <div className="about-us-container">
-      <h2 className="about-us-title">About Us</h2>
-      <p className="about-us-text">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed commodo libero eget 
-        tincidunt tristique. Proin blandit varius diam, id fermentum nunc condimentum in. 
-        Nunc auctor, sapien eu bibendum commodo, tellus sapien tempor libero, at placerat 
-        libero erat eu magna.
+      <div className="about-us-container" style={{ fontFamily:"Lato", borderRadius: '0px'}}>
+      <h2 className="about-us-title" style={{ fontFamily:"Lato", borderRadius: '0px'}}>About Us</h2>
+      <p className="about-us-text"style={{ fontFamily:"Lato", borderRadius: '0px'}}>
+      The current leadership team includes Dr Stefan Szyniszewski, Dr Oliver Duncan, Dr Lukasz Kaczmarczyk 
+      and Prof Fabrizio Scarpa. We met through the UK MetaMaterials Network, and based on shared interests 
+      and complementary backgrounds.<p/>
+      
+      We have been planning and working on the meta-genome project since 2021. 
+      The project has been implemented and brilliantly executed by Dr Jacob Earnshaw, Jordan Byers and Nicholas 
+      Syrotiouk.
       </p>
     </div>
       <div className="team-list">
