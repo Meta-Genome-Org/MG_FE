@@ -33,24 +33,25 @@ function Home () {
     const [imgURL, setimgURL] = useState([])
 
     
+    // get meta-genome submission id (met_id) - not the same as PID.
+    // data contains info on point clicked in plotly graph.
+    // use x and y attribs to identify the met_id from listToPlot.
     const onPlotClick = (data) => {
       
       const chosenPoint = listToPlot.find(listElement => 
         listElement.xAxis === data.points[0].x && listElement.yAxis === data.points[0].y
       );
-      
       if (chosenPoint) {
-        
         setmet_id(chosenPoint.met_id);
       }
-  
+  // contains x and y axis values
   setSelectedData(data.points[0]);
-  console.log(data.points[0])
 };
 
-
+    //    **** POPULATE DROPDOWN MENUS ****
+    // initial population of x and y axis dropdown menus
+    // response.data is a static json object from api.
     useEffect(()=>{
-      
       axios.get('https://api.meta-genome.org/avail_data', {}, {
         })
       .then((response)=>{
@@ -59,12 +60,16 @@ function Home () {
       });
     },[])
 
-
+    //    **** UNIT-CONVERSION AND ELIMINATION OF MISMATCH DATA ****
+    // collating the raw json from API containing x and y data into
+    // a single array with necessary data.
+    // This will only collate data points where both x and y data are paired
+    // changes when x or y axis is changed
+    // sets the final combined array into listToPlot
     useEffect(()=>{
       
       const combinedXYDataArray = [];
       
-
       if(xAxisData.length > 0 && yAxisData.length > 0 ){
 
         for(let i = 0; i < yAxisData.length; i++){
@@ -92,7 +97,10 @@ function Home () {
     }
     },[xAxisData, yAxisData])
 
-
+    //    **** GET X AXIS DATA AND SANITIZE ****
+    // get json containing requested x Axis data from API.
+    // standardises units according to requested data type
+    // (see '../Utils/convertData.js)
     useEffect(()=>{
       if (xAxisLabel !== "X-Axis"  && yAxisLabel !== "Y-Axis"){
 
@@ -104,18 +112,23 @@ function Home () {
 ;        setXAxisData(newData.data);
         
         setXUnitsDropDownOptions(newData.units)
+        // if the data is unitless - set keyword to display on plot axis
         if (newData.units[0].keyword === null){
           setXAxisUnit("unitless")
         }
         else if(newData.units[0].keyword !== null){
           setXAxisUnit(newData.units[1].keyword)
 }
+    // Reset publication details and x y object upon selection of new axis
     setpubDetails({authors:"", doi:"",img:"",img_pid:"",journal:"",metaPid:"",title:"",year:""})
     setSelectedData({xAxis:"",yAxis:""})
     setimgURL(null)
       })};
     },[xAxisLabel])
 
+    //    **** GET X AXIS DATA AND SANITIZE ****
+    // functionally very similar to x axis request - see above. 
+    // site for truncation of code
     useEffect(()=>{
       if (xAxisLabel !== "X-Axis" && yAxisLabel !== "Y-Axis"){
         
@@ -142,7 +155,7 @@ function Home () {
     },[yAxisLabel])
 
 
-
+    //    **** GET PUBLICATION INFORMATION ON CLICKED DATA POINT ****
     useEffect(()=>{
       if (met_id.length !== 0) {
         try{
