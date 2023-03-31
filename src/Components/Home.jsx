@@ -34,9 +34,19 @@ function Home () {
 
     
     const onPlotClick = (data) => {
-  setmet_id(listToPlot[data.points[0].pointIndex].met_id);
-  setimgURL(null)
-  setSelectedData(data.points[0]);};
+      
+      const chosenPoint = listToPlot.find(listElement => 
+        listElement.xAxis === data.points[0].x && listElement.yAxis === data.points[0].y
+      );
+      
+      if (chosenPoint) {
+        
+        setmet_id(chosenPoint.met_id);
+      }
+  
+  setSelectedData(data.points[0]);
+  console.log(data.points[0])
+};
 
 
     useEffect(()=>{
@@ -76,7 +86,7 @@ function Home () {
             }
             
           }}}
-          
+      
       setListToPlot(combinedXYDataArray)
     
     }
@@ -95,12 +105,14 @@ function Home () {
         
         setXUnitsDropDownOptions(newData.units)
         if (newData.units[0].keyword === null){
-          setXAxisUnit("")
+          setXAxisUnit("unitless")
         }
         else if(newData.units[0].keyword !== null){
           setXAxisUnit(newData.units[1].keyword)
 }
-    console.log(xAxisData)
+    setpubDetails({authors:"", doi:"",img:"",img_pid:"",journal:"",metaPid:"",title:"",year:""})
+    setSelectedData({xAxis:"",yAxis:""})
+    setimgURL(null)
       })};
     },[xAxisLabel])
 
@@ -110,7 +122,7 @@ function Home () {
       axios.get(`https://api.meta-genome.org/get_vals/${yAxisLabel}`, {}, {
       })
       .then((response)=>{
-
+        
         const newData = convertData(response.data, yAxisLabel, yAxisUnit)
         if (newData.units[0].keyword === null){
           setYAxisUnit("unitless")
@@ -119,11 +131,13 @@ function Home () {
           
           setYAxisUnit(newData.units[1].keyword)
         }
-        
 ;        setYAxisData(newData.data);
         
         setYUnitsDropDownOptions(newData.units)
        
+        setpubDetails({authors:"", doi:"",img:"",img_pid:"",journal:"",metaPid:"",title:"",year:""})
+        setSelectedData({xAxis:"",yAxis:""})
+        setimgURL(null)
       })};
     },[yAxisLabel])
 
@@ -134,9 +148,9 @@ function Home () {
         try{
           axios.get(`https://api.meta-genome.org/get_pub/${met_id}`)
           .then((response)=>{
-    
+
     ;       setpubDetails(response.data);
-            
+            console.log(response.data)
             console.log(response.data.img)
             if (response.data.img === ""){
               setimgURL(null)
@@ -161,19 +175,13 @@ function Home () {
     return (
 
       <>
-    <div style={{width: '100%', height: useWindowDimensions()/10 , display: 'flex', justifyContent: 'center', alignItems: 'center', margin:10}}>
-    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center',height: '100%', width: '90%', backgroundColor: 'white', borderRadius: '0px', fontFamily:"Lato"}}>
-        <h1>Meta-Materials Genome Project</h1>
-    </div>
-    </div>  
+    
 
     <div style={{width: '100%', height: height*0.58 , display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
     <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px', width: '50%'}}>
     <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '95%', backgroundColor: 'white', borderRadius: '0px'}}>
         <Plot
-          
             data={[
-              
               {
                 x: listToPlot.map((listElement) => listElement.xAxis),
                 y: listToPlot.map((listElement) => listElement.yAxis),
@@ -187,8 +195,8 @@ function Home () {
                 ),
               },
               {
-                x: listToPlot.filter((listElement) => listElement.sub_type === 'base-material').map((listElement) => listElement.xAxis),
-                y: listToPlot.filter((listElement) => listElement.sub_type === 'base-material').map((listElement) => listElement.yAxis),
+                x: listToPlot.filter((listElement) => listElement.sub_type === "base-material").map((listElement) => listElement.xAxis),
+                y: listToPlot.filter((listElement) => listElement.sub_type === "base-material").map((listElement) => listElement.yAxis),
                 type: 'scatter',
                 mode: 'markers',
                 marker: { color: 'purple' },
@@ -198,8 +206,6 @@ function Home () {
                     `material type: ${listElement.mat_type}<br>X data type: ${listElement.xType}<br>Y data type: ${listElement.yType}`
                 ),
               },
-            
-          
             
             ]}
             layout={ {width: 640, height: 400, showlegend:true, title: {
@@ -275,7 +281,7 @@ function Home () {
       Meta-Genome Graph Customization
       </h2>
     <p style={{textAlign: 'center', margin: '10px 0', marginBottom: '20px', fontFamily:"Lato"}}>
-      This graph present data from the Meta-genome database. Try changing the requested data to investigate material space!
+      Try changing the requested data to investigate material space!
       </p>
 
     <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%'}}>

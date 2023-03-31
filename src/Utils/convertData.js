@@ -4,7 +4,7 @@ function convertData(jsonData, keyword, desiredUnit) {
   if (keyword === "tensile-modulus" || keyword === "compressive-modulus" || 
       keyword === "yield-strength" || keyword === "ultimate-yield-strength"){
 
-        if (desiredUnit === ""){
+        if (desiredUnit === "" || desiredUnit === null || desiredUnit === "unitless"){
 
           desiredUnit = "MPa"
         }
@@ -80,7 +80,12 @@ function convertData(jsonData, keyword, desiredUnit) {
 
         const avail_datas = [{keyword: null}]
         
-        
+        for (let i = 0; i < jsonData.length; i++) {
+          for (let key in jsonData[i][keyword][0]['values']){
+          const valuesString = jsonData[i][keyword][0]['values'][key];
+          jsonData[i][keyword][0]['values'][key] = parseFloat(valuesString);
+          }
+        }
 
 
         return {data: jsonData, units: avail_datas};
