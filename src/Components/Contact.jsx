@@ -10,6 +10,7 @@ import jordan from '../Assets/Jordan.png'
 import stefan from '../Assets/Stefan1.jpg'
 import fabrizio from '../Assets/Fabrizio.jpg'
 import lukasz from '../Assets/Lukasz.png'
+import jacob from '../Assets/Jacob.jpg'
 
 
 const TeamMember = (props) => {
@@ -99,10 +100,10 @@ const Contact = () => {
         name: 'Jacob Earnshaw',
         role: 'Postdoc Researcher',
         email: "jacob-earnshaw@hotmail.co.uk",
-        picture: Logo,
+        picture: jacob,
         social: [
           { name: 'LinkedIn', url: '', icon: faLinkedin },
-          { name: 'Twitter', url: '', icon: faTwitter },
+          { name: 'Orcid', url: 'https://orcid.org/0000-0002-0860-4891', icon: faOrcid },
         ],
       },
       

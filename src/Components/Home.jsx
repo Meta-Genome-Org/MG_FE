@@ -52,7 +52,7 @@ function Home () {
     // initial population of x and y axis dropdown menus
     // response.data is a static json object from api.
     useEffect(()=>{
-      axios.get('https://api.meta-genome.org/avail_data', {}, {
+      axios.get('http://localhost:5000/avail_data', {}, {
         })
       .then((response)=>{
         setDropDownOptions(response.data)
@@ -104,7 +104,7 @@ function Home () {
     useEffect(()=>{
       if (xAxisLabel !== "X-Axis"  && yAxisLabel !== "Y-Axis"){
 
-      axios.get(`https://api.meta-genome.org/get_vals/${xAxisLabel}`)
+      axios.get(`http://localhost:5000/get_vals/${xAxisLabel}`)
       .then((response)=>{
 
         const newData = convertData(response.data, xAxisLabel, xAxisUnit)
@@ -132,7 +132,7 @@ function Home () {
     useEffect(()=>{
       if (xAxisLabel !== "X-Axis" && yAxisLabel !== "Y-Axis"){
         
-      axios.get(`https://api.meta-genome.org/get_vals/${yAxisLabel}`, {}, {
+      axios.get(`http://localhost:5000/get_vals/${yAxisLabel}`, {}, {
       })
       .then((response)=>{
         
@@ -159,7 +159,7 @@ function Home () {
     useEffect(()=>{
       if (met_id.length !== 0) {
         try{
-          axios.get(`https://api.meta-genome.org/get_pub/${met_id}`)
+          axios.get(`http://localhost:5000/get_pub/${met_id}`)
           .then((response)=>{
 
     ;       setpubDetails(response.data);

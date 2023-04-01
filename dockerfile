@@ -1,4 +1,4 @@
-FROM node:18 as build
+FROM node:18
 
 ENV NODE_ENV=production
 
@@ -13,11 +13,4 @@ COPY . .
 
 EXPOSE 3000
 
-RUN npm run build
-
-#deploy 
-FROM nginx:alpine as production
-
-COPY --from=build /build /var/www/html/
-COPY ./conf/subsite.conf /etc/nginx/conf.d/default.conf
-
+CMD ["sh", "-c", "npm start"]
